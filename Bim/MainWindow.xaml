@@ -10,13 +10,14 @@
         <TabControl>
             <TabItem x:Name="people" Header="Люди">
                 <StackPanel>
+                    
                     <ListBox ItemsSource="{Binding persons}" SelectedItem="{Binding currentPerson}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="5">
-                                    <TextBlock FontSize="15" Text="{Binding Path=ID}"></TextBlock>
-                                    <TextBlock Text="{Binding Path=Name}"></TextBlock>
-                                    <TextBlock Text="{Binding Path=Age}"></TextBlock>
+                                    <TextBlock FontSize="15" Text="{Binding ID}"></TextBlock>
+                                    <TextBlock Text="{Binding Name}"></TextBlock>
+                                    <TextBlock Text="{Binding Age}"></TextBlock>
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>

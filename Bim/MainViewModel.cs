@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -8,13 +9,12 @@ namespace Bim
 {
     class MainViewModel:INotifyPropertyChanged
     {
-        public List<Person> persons = new List<Person>();
         public MainViewModel()
         {
             using (StreamReader r = new StreamReader("big_data_persons.json"))
             {
                 string input = r.ReadToEnd();
-                persons = JsonConvert.DeserializeObject<List<Person>>(input);
+                var persons = JsonConvert.DeserializeObject<ObservableCollection<Person>>(input);
             }
         }
 

@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace Bim
 {
-    class Person : INotifyPropertyChanged
+    public class Person : INotifyPropertyChanged
     {
         private string id;
         private string name;
