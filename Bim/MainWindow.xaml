@@ -10,26 +10,34 @@
         <TabControl>
             <TabItem x:Name="people" Header="Люди">
                 <StackPanel>
-                    
-                    <ListBox ItemsSource="{Binding persons}" SelectedItem="{Binding currentPerson}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Margin="5">
-                                    <TextBlock FontSize="15" Text="{Binding ID}"></TextBlock>
-                                    <TextBlock Text="{Binding Name}"></TextBlock>
-                                    <TextBlock Text="{Binding Age}"></TextBlock>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-
+                    <DataGrid ItemsSource="{Binding Persons}" SelectedItem="{Binding currentPerson}" HorizontalAlignment="Left" CanUserAddRows="False" Width="610" RowHeight="25"  ColumnWidth="200" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding ID}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Age" Binding="{Binding Age}"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </StackPanel>
             </TabItem>
             <TabItem x:Name="contact" Header="Контакты">
-                <DataGrid>
-
-                </DataGrid>
+                <StackPanel>
+                    <DataGrid ItemsSource="{Binding Contacts}" SelectedItem="{Binding currentContact}" HorizontalAlignment="Left" CanUserAddRows="False" Width="610" RowHeight="25"  ColumnWidth="200" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="From" Binding="{Binding From}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="To" Binding="{Binding To}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Member1_ID" Binding="{Binding Member1_ID}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Member2_ID" Binding="{Binding Member2_ID}"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
             </TabItem>
         </TabControl>
+        <StackPanel Orientation="Horizontal" Height="50" VerticalAlignment="Bottom">
+            <TextBlock Text="Номер страницы" VerticalAlignment="Center" Margin="5"/>
+            <TextBox Name="PageNum" VerticalAlignment="Center" Width="30" Text="{Binding PageNumber}" />
+            <Button Content="Перейти" VerticalAlignment="Center" Margin="5" Command="{Binding GoCommand}"/>
+            <Button Content="Вперед" Margin="5"  VerticalAlignment="Center" Command="{Binding ForwardCommand}"/>
+            <Button Content="Назад" Margin="5"  VerticalAlignment="Center" Command="{Binding BackCommand}"/>
+        </StackPanel>
     </Grid>
 </Window>
