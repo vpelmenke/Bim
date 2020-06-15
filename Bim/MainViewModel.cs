@@ -10,11 +10,11 @@ namespace Bim
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-        private Person[] allPersons;
+        private Person[] allPersons; 
         private Contact[] allContacts;
         public ObservableCollection<Person> Persons { get; set; }
         public ObservableCollection<Contact> Contacts { get; set; }
-        private int page = 1;
+        private int page = 1; // номер текущей отображаемой страницы
 
         public MainViewModel()
         {
@@ -25,7 +25,6 @@ namespace Bim
         private Command forwardCommand;
         private Command backCommand;
         private Command averageCommand;
-        private Command showCommand;
         public Command ForwardCommand // Переход на следующую страницу
         {
             get
@@ -40,13 +39,13 @@ namespace Bim
 
                            if (FilterEnabled)
                            {
-                               var a = allContacts.Where(x =>
+                               var filterArray = allContacts.Where(x =>
                                    Convert.ToDateTime(x.From) >= DateIn && Convert.ToDateTime(x.To) <= DateOut
                                                                         && Convert.ToDateTime(x.To)
                                                                             .Subtract(Convert.ToDateTime(x.From)).Minutes >
-                                                                        10).ToArray();
-                               var b = Paging(10, a);
-                               foreach (var row in b)
+                                                                        10).ToArray();// Фильтр контактов дольше 10 минут
+                               var result = Paging(10, filterArray); // Итоговое отображение отфильтрованных данных
+                               foreach (var row in result)
                                {
                                    Contacts.Add(row);
                                }
@@ -91,13 +90,13 @@ namespace Bim
 
                            if (FilterEnabled)
                            {
-                               var a = allContacts.Where(x =>
+                               var filterArray = allContacts.Where(x =>
                                    Convert.ToDateTime(x.From) >= DateIn && Convert.ToDateTime(x.To) <= DateOut
                                                                         && Convert.ToDateTime(x.To)
                                                                             .Subtract(Convert.ToDateTime(x.From)).Minutes >
-                                                                        10).ToArray();
-                               var b = Paging(10, a);
-                               foreach (var row in b)
+                                                                        10).ToArray(); // Фильтр контактов больше 10 минут
+                               var result = Paging(10, filterArray); // итоговое отображение отфильтрованных данных
+                               foreach (var row in result)
                                {
                                    Contacts.Add(row);
                                }
@@ -157,7 +156,7 @@ namespace Bim
         private string averAge;
         private DateTime dateIn = DateTime.Today;
         private DateTime dateOut = DateTime.Today;
-        private bool _filterEnabled;
+        private bool _filterEnabled; // нужно ли применять фильтрацию по датам
 
         public bool FilterEnabled
         {
