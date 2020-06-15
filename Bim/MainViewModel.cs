@@ -95,7 +95,7 @@ namespace Bim
                                                                         && Convert.ToDateTime(x.To)
                                                                             .Subtract(Convert.ToDateTime(x.From)).Minutes >
                                                                         10).ToArray(); // Фильтр контактов больше 10 минут
-                               var result = Paging(10, filterArray); // итоговое отображение отфильтрованных данных
+                               var result = Paging(10, filterArray); // Итоговое отображение отфильтрованных данных
                                foreach (var row in result)
                                {
                                    Contacts.Add(row);
