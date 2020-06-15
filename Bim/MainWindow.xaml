@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Bim"
-        mc:Ignorable="d"
+        mc:Ignorable="d" Loaded="MainWindow_OnLoaded"
         Title="MainWindow" Height="450" Width="630" ResizeMode="NoResize">
     <Grid>
         <TabControl>
@@ -47,7 +47,7 @@
                     <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short" Margin="5"  VerticalAlignment="Center" SelectedDate="{Binding DateIn}"></DatePicker>
                     <TextBlock Text="Конец: " Margin="5"  VerticalAlignment="Center"></TextBlock>
                     <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short" Margin="5"  VerticalAlignment="Center" SelectedDate="{Binding DateOut}"></DatePicker>
-                    <Button Content="Показать" Margin="5"  VerticalAlignment="Center" Command="{Binding ShowCommand}"></Button>
+                    <CheckBox Content="Показать" Margin="5"  VerticalAlignment="Center" IsChecked="{Binding FilterEnabled}"></CheckBox>
                 </StackPanel>
                 </Grid>
             </TabItem>

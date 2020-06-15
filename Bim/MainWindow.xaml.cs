@@ -19,5 +19,10 @@ namespace Bim
             //ViewModel = new MainViewModel();
         }
 
+        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as MainViewModel;
+            vm?.LoadData();
+        }
     }
 }

@@ -8,11 +8,14 @@ using Newtonsoft.Json;
 
 namespace Bim
 {
-    public class MainViewModel:INotifyPropertyChanged
+    public class MainViewModel : INotifyPropertyChanged
     {
+        private Person[] allPersons;
+        private Contact[] allContacts;
         public ObservableCollection<Person> Persons { get; set; }
         public ObservableCollection<Contact> Contacts { get; set; }
-        private int page = 0;
+        private int page = 1;
+
         public MainViewModel()
         {
             Persons = new ObservableCollection<Person>();
@@ -30,23 +33,46 @@ namespace Bim
                 return forwardCommand ??
                        (forwardCommand = new Command(obj =>
                        {
-                           Persons = new ObservableCollection<Person>();
-                           Contacts = new ObservableCollection<Contact>();
+
                            page++;
-                           using (StreamReader r = new StreamReader("big_data_persons.json"))
+                           Contacts.Clear();
+                           Persons.Clear();
+
+                           if (FilterEnabled)
                            {
-                               string input = r.ReadToEnd();
-                               var a = JsonConvert.DeserializeObject<ObservableCollection<Person>>(input);
-                               Persons = PagingForPersons(10, a);
-                               OnPropertyChanged("Persons");
+                               var a = allContacts.Where(x =>
+                                   Convert.ToDateTime(x.From) >= DateIn && Convert.ToDateTime(x.To) <= DateOut
+                                                                        && Convert.ToDateTime(x.To)
+                                                                            .Subtract(Convert.ToDateTime(x.From)).Minutes >
+                                                                        10).ToArray();
+                               var b = Paging(10, a);
+                               foreach (var row in b)
+                               {
+                                   Contacts.Add(row);
+                               }
                            }
-                           using (StreamReader r = new StreamReader("big_data_contracts.json"))
+                           else
                            {
-                               string input = r.ReadToEnd();
-                               var b = JsonConvert.DeserializeObject<ObservableCollection<Contact>>(input);
-                               Contacts = PagingForContacts(10, b);
-                               OnPropertyChanged("Contacts");
+                               var contacts = Paging(10, allContacts);
+                               foreach (var row in contacts)
+                               {
+                                   Contacts.Add(row);
+                               }
                            }
+
+                           if (!Contacts.Any())
+                           {
+                               backCommand.Execute(null);
+                               return;
+                           }
+
+                           var persons = Paging(10, allPersons);
+                           foreach (var row in persons)
+                           {
+                               Persons.Add(row);
+                           }
+
+                           
                        }));
             }
         }
@@ -57,24 +83,41 @@ namespace Bim
                 return backCommand ??
                        (backCommand = new Command(obj =>
                        {
-                           Persons = new ObservableCollection<Person>();
-                           Contacts = new ObservableCollection<Contact>();
-                           if (page > 0)page--;
-                           using (StreamReader r = new StreamReader("big_data_persons.json"))
+
+                           if (page <= 1) return;
+                           page--;
+                           Contacts.Clear();
+                           Persons.Clear();
+
+                           if (FilterEnabled)
                            {
-                               string input = r.ReadToEnd();
-                               var a = JsonConvert.DeserializeObject<ObservableCollection<Person>>(input);
-                               Persons = PagingForPersons(10, a);
-                               OnPropertyChanged("Persons");
+                               var a = allContacts.Where(x =>
+                                   Convert.ToDateTime(x.From) >= DateIn && Convert.ToDateTime(x.To) <= DateOut
+                                                                        && Convert.ToDateTime(x.To)
+                                                                            .Subtract(Convert.ToDateTime(x.From)).Minutes >
+                                                                        10).ToArray();
+                               var b = Paging(10, a);
+                               foreach (var row in b)
+                               {
+                                   Contacts.Add(row);
+                               }
+                           }
+                           else
+                           {
+                               var contacts = Paging(10, allContacts);
+                               foreach (var row in contacts)
+                               {
+                                   Contacts.Add(row);
+                               }
                            }
 
-                           using (StreamReader r = new StreamReader("big_data_contracts.json"))
+                           var persons = Paging(10, allPersons);
+                           foreach (var row in persons)
                            {
-                               string input = r.ReadToEnd();
-                               var b = JsonConvert.DeserializeObject<ObservableCollection<Contact>>(input);
-                               Contacts = PagingForContacts(10, b);
-                               OnPropertyChanged("Contacts");
+                               Persons.Add(row);
                            }
+
+
                        }));
             }
         }
@@ -83,59 +126,26 @@ namespace Bim
         {
             get
             {
-                return averageCommand ?? 
+                return averageCommand ??
                        (averageCommand = new Command(obj =>
                        {
                            var count = 0;
                            var age = 0;
-                           using (StreamReader r = new StreamReader("big_data_persons.json"))
-                           {
-                               string input = r.ReadToEnd();
-                               var a = JsonConvert.DeserializeObject<ObservableCollection<Person>>(input);
-                               foreach (var VARIABLE in a)
+                           foreach (var row in allPersons)
+                           { 
+                               var name = row.Name.Split(' '); 
+                               if (name[1] == UserName)
                                {
-                                   var name = VARIABLE.Name.Split(' ');
-                                   if (name[1] == UserName)
-                                   {
-                                       count++;
-                                       age += Convert.ToInt32(VARIABLE.Age);
-                                   }
-                               }
-
-                               if (count > 0)
-                               {
-                                   var result = age / count;
-                                   AverAge = result.ToString();
-                                   OnPropertyChanged("AverAge");
+                                   count++;
+                                   age += Convert.ToInt32(row.Age);
                                }
                            }
-                       }));
-            }
-        }
 
-        public Command ShowCommand // Отображение контактов в указанном интервале, которые длились > 10 минут.
-        {
-            get
-            {
-                return showCommand ??
-                       (showCommand = new Command(obj =>
-                       {
-                           using (StreamReader r = new StreamReader("big_data_contracts.json"))
+                           if (count > 0)
                            {
-                               string input = r.ReadToEnd();
-                               var b = JsonConvert.DeserializeObject<ObservableCollection<Contact>>(input);
-                               Contacts.Clear();
-                               foreach (var VARIABLE in b)
-                               {
-                                   var dateFrom = Convert.ToDateTime(VARIABLE.From);
-                                   var dateTo = Convert.ToDateTime(VARIABLE.To);
-                                   if (dateFrom >= DateIn && dateTo <= DateOut)
-                                       if (dateTo.Subtract(dateFrom).Minutes > 10)
-                                           Contacts.Add(VARIABLE);
-
-                                   if(Contacts.Count == 10) break; // Здесь нужно написать нормальный обработчик вывода.
-                               }
-                               OnPropertyChanged("Contacts");
+                               var result = age / count;
+                               AverAge = result.ToString();
+                               OnPropertyChanged("AverAge");
                            }
                        }));
             }
@@ -147,6 +157,17 @@ namespace Bim
         private string averAge;
         private DateTime dateIn = DateTime.Today;
         private DateTime dateOut = DateTime.Today;
+        private bool _filterEnabled;
+
+        public bool FilterEnabled
+        {
+            get => _filterEnabled;
+            set
+            {
+                _filterEnabled = value; 
+                OnPropertyChanged("FilterEnabled");
+            }
+        }
 
         public DateTime DateIn
         {
@@ -207,26 +228,44 @@ namespace Bim
             }
         }
 
-
-        private ObservableCollection<Person> PagingForPersons(int number, ObservableCollection<Person> t)
+        private T[] Paging<T>(int number, T[] t)
         {
-            ObservableCollection<Person> persons = new ObservableCollection<Person>();
-            persons = new ObservableCollection<Person>(t.Take(number * page).Skip(number * (page - 1)));
-            return persons;
-        }
-
-        private ObservableCollection<Contact> PagingForContacts(int number, ObservableCollection<Contact> t)
-        {
-            ObservableCollection<Contact> contacts = new ObservableCollection<Contact>();
-            contacts = new ObservableCollection<Contact>(t.Take(number * page).Skip(number * (page - 1)));
-            return contacts;
+            var rows = t.Take(number * page).Skip(number * (page - 1)).ToArray();
+            return rows;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+        }
+
+        public void LoadData()
+        {
+            using (StreamReader r = new StreamReader("big_data_persons.json"))
+            {
+                string input = r.ReadToEnd();
+                allPersons = JsonConvert.DeserializeObject<Person[]>(input);
+            }
+
+            using (StreamReader r = new StreamReader("big_data_contracts.json"))
+            {
+                string input = r.ReadToEnd();
+                allContacts = JsonConvert.DeserializeObject<Contact[]>(input);
+            }
+
+            var contacts = Paging(10, allContacts);
+            foreach (var row in contacts)
+            {
+                Contacts.Add(row);
+            }
+
+            var persons = Paging(10, allPersons);
+            foreach (var row in persons)
+            {
+                Persons.Add(row);
+            }
         }
     }
 }
