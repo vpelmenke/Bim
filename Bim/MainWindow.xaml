@@ -11,7 +11,8 @@
             <TabItem x:Name="people" Header="Люди">
                 <Grid>
                     <StackPanel>
-                    <DataGrid ItemsSource="{Binding Persons}" SelectedItem="{Binding currentPerson}" HorizontalAlignment="Left" CanUserAddRows="False" Width="610" RowHeight="25"  AutoGenerateColumns="False">
+                    <DataGrid ItemsSource="{Binding Persons}" SelectedItem="{Binding currentPerson}" 
+                              HorizontalAlignment="Left" CanUserAddRows="False" Width="610" RowHeight="25"  AutoGenerateColumns="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID" Binding="{Binding ID}"></DataGridTextColumn>
                             <DataGridTextColumn Header="Name" Binding="{Binding Name}"></DataGridTextColumn>
@@ -22,7 +23,8 @@
                 <StackPanel Orientation="Horizontal" Height="50" VerticalAlignment="Bottom">
                     <Button Content="Назад" Margin="5"  VerticalAlignment="Center" Command="{Binding BackCommand}"/>
                     <Button Content="Вперед" Margin="5"  VerticalAlignment="Center" Command="{Binding ForwardCommand}"/>
-                    <Button Content="Средний возраст людей с именем: " Margin="5"  VerticalAlignment="Center" Command="{Binding AverageCommand}"></Button>
+                    <Button Content="Средний возраст людей с именем: " Margin="5"  
+                            VerticalAlignment="Center" Command="{Binding AverageCommand}"></Button>
                     <TextBox Width="170"  MaxHeight="27" FontSize="20" Text="{Binding UserName}"></TextBox>
                     <TextBlock Text="{Binding AverAge}" Margin="5"  FontSize="27" VerticalAlignment="Center"></TextBlock>
                 </StackPanel>
@@ -31,7 +33,9 @@
             <TabItem x:Name="contact" Header="Контакты">
                 <Grid>
                     <StackPanel>
-                    <DataGrid ItemsSource="{Binding Contacts}" SelectedItem="{Binding currentContact}" HorizontalAlignment="Left" CanUserAddRows="False" Width="610" RowHeight="25" AutoGenerateColumns="False" VerticalScrollBarVisibility="Auto">
+                    <DataGrid ItemsSource="{Binding Contacts}" SelectedItem="{Binding currentContact}" 
+                              HorizontalAlignment="Left" CanUserAddRows="False" Width="610" RowHeight="25"
+                              AutoGenerateColumns="False" VerticalScrollBarVisibility="Auto">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="From" Binding="{Binding From}"></DataGridTextColumn>
                             <DataGridTextColumn Header="To" Binding="{Binding To}"></DataGridTextColumn>
@@ -44,9 +48,11 @@
                     <Button Content="Назад" Margin="5"  VerticalAlignment="Center" Command="{Binding BackCommand}"/>
                     <Button Content="Вперед" Margin="5"  VerticalAlignment="Center" Command="{Binding ForwardCommand}"/>
                     <TextBlock Text="Начало: " Margin="5"  VerticalAlignment="Center"></TextBlock>
-                    <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short" Margin="5"  VerticalAlignment="Center" SelectedDate="{Binding DateIn}"></DatePicker>
+                    <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short" Margin="5"  
+                                VerticalAlignment="Center" SelectedDate="{Binding DateIn}"></DatePicker>
                     <TextBlock Text="Конец: " Margin="5"  VerticalAlignment="Center"></TextBlock>
-                    <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short" Margin="5"  VerticalAlignment="Center" SelectedDate="{Binding DateOut}"></DatePicker>
+                    <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short" Margin="5"  
+                                VerticalAlignment="Center" SelectedDate="{Binding DateOut}"></DatePicker>
                     <CheckBox Content="Показать" Margin="5"  VerticalAlignment="Center" IsChecked="{Binding FilterEnabled}"></CheckBox>
                 </StackPanel>
                 </Grid>
