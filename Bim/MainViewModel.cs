@@ -146,6 +146,11 @@ namespace Bim
                                AverAge = result.ToString();
                                OnPropertyChanged("AverAge");
                            }
+                           else
+                           {
+                               AverAge = "Такого нет!";
+                               OnPropertyChanged("AverAge");
+                           }
                        }));
             }
         }

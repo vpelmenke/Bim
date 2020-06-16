@@ -26,7 +26,7 @@
                     <Button Content="Средний возраст людей с именем: " Margin="5"  
                             VerticalAlignment="Center" Command="{Binding AverageCommand}"></Button>
                     <TextBox Width="170"  MaxHeight="27" FontSize="20" Text="{Binding UserName}"></TextBox>
-                    <TextBlock Text="{Binding AverAge}" Margin="5"  FontSize="27" VerticalAlignment="Center"></TextBlock>
+                    <TextBlock Text="{Binding AverAge}" Margin="5"  FontSize="22" VerticalAlignment="Center"></TextBlock>
                 </StackPanel>
                 </Grid>
             </TabItem>
