@@ -10,11 +10,11 @@ namespace Bim
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-        private Person[] allPersons; 
-        private Contact[] allContacts;
+        private Person[] _allPersons; 
+        private Contact[] _allContacts;
         public ObservableCollection<Person> Persons { get; set; }
         public ObservableCollection<Contact> Contacts { get; set; }
-        private int page = 1; // номер текущей отображаемой страницы
+        private int _page = 1; // номер текущей отображаемой страницы
 
         public MainViewModel()
         {
@@ -22,24 +22,24 @@ namespace Bim
             Contacts = new ObservableCollection<Contact>();
         }
 
-        private Command forwardCommand;
-        private Command backCommand;
-        private Command averageCommand;
+        private Command _forwardCommand;
+        private Command _backCommand;
+        private Command _averageCommand;
         public Command ForwardCommand // Переход на следующую страницу
         {
             get
             {
-                return forwardCommand ??
-                       (forwardCommand = new Command(obj =>
+                return _forwardCommand ??
+                       (_forwardCommand = new Command(obj =>
                        {
 
-                           page++;
+                           _page++;
                            Contacts.Clear();
                            Persons.Clear();
 
                            if (FilterEnabled)
                            {
-                               var filterArray = allContacts.Where(x =>
+                               var filterArray = _allContacts.Where(x =>
                                    Convert.ToDateTime(x.From) >= DateIn && Convert.ToDateTime(x.To) <= DateOut
                                                                         && Convert.ToDateTime(x.To)
                                                                             .Subtract(Convert.ToDateTime(x.From)).Minutes >
@@ -52,7 +52,7 @@ namespace Bim
                            }
                            else
                            {
-                               var contacts = Paging(10, allContacts);
+                               var contacts = Paging(10, _allContacts);
                                foreach (var row in contacts)
                                {
                                    Contacts.Add(row);
@@ -61,11 +61,11 @@ namespace Bim
 
                            if (!Contacts.Any())
                            {
-                               backCommand.Execute(null);
+                               _backCommand.Execute(null);
                                return;
                            }
 
-                           var persons = Paging(10, allPersons);
+                           var persons = Paging(10, _allPersons);
                            foreach (var row in persons)
                            {
                                Persons.Add(row);
@@ -79,18 +79,18 @@ namespace Bim
         {
             get
             {
-                return backCommand ??
-                       (backCommand = new Command(obj =>
+                return _backCommand ??
+                       (_backCommand = new Command(obj =>
                        {
 
-                           if (page <= 1) return;
-                           page--;
+                           if (_page <= 1) return;
+                           _page--;
                            Contacts.Clear();
                            Persons.Clear();
 
                            if (FilterEnabled)
                            {
-                               var filterArray = allContacts.Where(x =>
+                               var filterArray = _allContacts.Where(x =>
                                    Convert.ToDateTime(x.From) >= DateIn && Convert.ToDateTime(x.To) <= DateOut
                                                                         && Convert.ToDateTime(x.To)
                                                                             .Subtract(Convert.ToDateTime(x.From)).Minutes >
@@ -103,14 +103,14 @@ namespace Bim
                            }
                            else
                            {
-                               var contacts = Paging(10, allContacts);
+                               var contacts = Paging(10, _allContacts);
                                foreach (var row in contacts)
                                {
                                    Contacts.Add(row);
                                }
                            }
 
-                           var persons = Paging(10, allPersons);
+                           var persons = Paging(10, _allPersons);
                            foreach (var row in persons)
                            {
                                Persons.Add(row);
@@ -125,12 +125,12 @@ namespace Bim
         {
             get
             {
-                return averageCommand ??
-                       (averageCommand = new Command(obj =>
+                return _averageCommand ??
+                       (_averageCommand = new Command(obj =>
                        {
                            var count = 0;
                            var age = 0;
-                           foreach (var row in allPersons)
+                           foreach (var row in _allPersons)
                            { 
                                var name = row.Name.Split(' '); 
                                if (name[1] == UserName)
@@ -150,12 +150,12 @@ namespace Bim
             }
         }
 
-        private Person currentPerson;
-        private Contact currentContact;
-        private string userName;
-        private string averAge;
-        private DateTime dateIn = DateTime.Today;
-        private DateTime dateOut = DateTime.Today;
+        private Person _currentPerson;
+        private Contact _currentContact;
+        private string _userName;
+        private string _averAge;
+        private DateTime _dateIn = DateTime.Today;
+        private DateTime _dateOut = DateTime.Today;
         private bool _filterEnabled; // нужно ли применять фильтрацию по датам
 
         public bool FilterEnabled
@@ -170,66 +170,66 @@ namespace Bim
 
         public DateTime DateIn
         {
-            get => dateIn;
+            get => _dateIn;
             set
             {
-                dateIn = value;
+                _dateIn = value;
                 OnPropertyChanged("DateIn");
             }
         }
         public DateTime DateOut
         {
-            get => dateOut;
+            get => _dateOut;
             set
             {
-                dateOut = value;
+                _dateOut = value;
                 OnPropertyChanged("DateOut");
             }
         }
 
         public string UserName
         {
-            get => userName;
+            get => _userName;
             set
             {
-                userName = value;
+                _userName = value;
                 OnPropertyChanged("UserName");
             }
         }
 
         public string AverAge
         {
-            get => averAge;
+            get => _averAge;
             set
             {
-                averAge = value;
+                _averAge = value;
                 OnPropertyChanged("AverAge");
             }
         }
 
         public Person CurrentPerson
         {
-            get => currentPerson;
+            get => _currentPerson;
             set
             {
-                currentPerson = value;
+                _currentPerson = value;
                 OnPropertyChanged("CurrentPerson");
             }
         }
 
         public Contact CurrentContact
         {
-            get => currentContact;
+            get => _currentContact;
             set
             {
-                currentContact = value;
+                _currentContact = value;
                 OnPropertyChanged("CurrentContact");
             }
         }
 
         private T[] Paging<T>(int number, T[] t)
         {
-            var rows = t.Take(number * page).Skip(number * (page - 1)).ToArray();
+            var rows = t.Take(number * _page).Skip(number * (_page - 1)).ToArray();
             return rows;
         }
 
@@ -245,22 +245,22 @@ namespace Bim
             using (StreamReader r = new StreamReader("big_data_persons.json"))
             {
                 string input = r.ReadToEnd();
-                allPersons = JsonConvert.DeserializeObject<Person[]>(input);
+                _allPersons = JsonConvert.DeserializeObject<Person[]>(input);
             }
 
             using (StreamReader r = new StreamReader("big_data_contracts.json"))
             {
                 string input = r.ReadToEnd();
-                allContacts = JsonConvert.DeserializeObject<Contact[]>(input);
+                _allContacts = JsonConvert.DeserializeObject<Contact[]>(input);
             }
 
-            var contacts = Paging(10, allContacts);
+            var contacts = Paging(10, _allContacts);
             foreach (var row in contacts)
             {
                 Contacts.Add(row);
             }
 
-            var persons = Paging(10, allPersons);
+            var persons = Paging(10, _allPersons);
             foreach (var row in persons)
             {
                 Persons.Add(row);
