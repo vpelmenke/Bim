@@ -5,59 +5,70 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Bim"
         mc:Ignorable="d" Loaded="MainWindow_OnLoaded"
-        Title="MainWindow" Height="450" Width="630" ResizeMode="NoResize">
+        Title="BIM" Height="450" Width="630" ResizeMode="NoResize">
     <Grid>
         <TabControl>
             <TabItem x:Name="people" Header="Люди">
                 <Grid>
                     <StackPanel>
-                    <DataGrid ItemsSource="{Binding Persons}" SelectedItem="{Binding currentPerson}" 
-                              HorizontalAlignment="Left" CanUserAddRows="False" Width="610" RowHeight="25"  AutoGenerateColumns="False">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID" Binding="{Binding ID}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Name" Binding="{Binding Name}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Age" Binding="{Binding Age}"></DataGridTextColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Height="50" VerticalAlignment="Bottom">
-                    <Button Content="Назад" Margin="5"  VerticalAlignment="Center" Command="{Binding BackCommand}"/>
-                    <Button Content="Вперед" Margin="5"  VerticalAlignment="Center" Command="{Binding ForwardCommand}"/>
-                    <Button Content="Средний возраст людей с именем: " Margin="5"  
-                            VerticalAlignment="Center" Command="{Binding AverageCommand}"></Button>
-                    <TextBox Width="170"  MaxHeight="27" FontSize="20" Text="{Binding UserName}"></TextBox>
-                    <TextBlock Text="{Binding AverAge}" Margin="5"  FontSize="22" VerticalAlignment="Center"></TextBlock>
-                </StackPanel>
+                        <DataGrid ItemsSource="{Binding Persons}" SelectedItem="{Binding currentPerson}" 
+                                HorizontalAlignment="Left" CanUserAddRows="False" Width="610" RowHeight="25"  AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ID" Binding="{Binding ID}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Name}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Age" Binding="{Binding Age}"></DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Bottom">
+                        <StackPanel Orientation="Horizontal" Height="50">
+                            <Button Content="Перейти на: " VerticalAlignment="Center" Command="{Binding GoCommand}"></Button>
+                            <TextBox Text="{Binding PageNumber}" VerticalAlignment="Center"></TextBox>
+                            <Button Content="Назад" Margin="5"  VerticalAlignment="Center" Command="{Binding BackCommand}"/>
+                            <Button Content="Вперед" Margin="5"  VerticalAlignment="Center" Command="{Binding ForwardCommand}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Height="50">
+                            <Button Content="Средний возраст людей с именем: " Margin="5"  
+                                VerticalAlignment="Center" Command="{Binding AverageCommand}"></Button>
+                            <TextBox Width="170"  MaxHeight="27" FontSize="20" Text="{Binding UserName}"></TextBox>
+                            <TextBlock Text="{Binding AverAge}" Margin="5"  FontSize="18" VerticalAlignment="Center"></TextBlock>
+                        </StackPanel>
+                    </StackPanel>
                 </Grid>
             </TabItem>
             <TabItem x:Name="contact" Header="Контакты">
                 <Grid>
                     <StackPanel>
-                    <DataGrid ItemsSource="{Binding Contacts}" SelectedItem="{Binding currentContact}" 
-                              HorizontalAlignment="Left" CanUserAddRows="False" Width="610" RowHeight="25"
-                              AutoGenerateColumns="False" VerticalScrollBarVisibility="Auto">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="From" Binding="{Binding From}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="To" Binding="{Binding To}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Member1_ID" Binding="{Binding Member1_ID}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Member2_ID" Binding="{Binding Member2_ID}"></DataGridTextColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Height="50" VerticalAlignment="Bottom">
-                    <Button Content="Назад" Margin="5"  VerticalAlignment="Center" Command="{Binding BackCommand}"/>
-                    <Button Content="Вперед" Margin="5"  VerticalAlignment="Center" Command="{Binding ForwardCommand}"/>
-                    <TextBlock Text="Начало: " Margin="5"  VerticalAlignment="Center"></TextBlock>
-                    <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short" Margin="5"  
-                                VerticalAlignment="Center" SelectedDate="{Binding DateIn}"></DatePicker>
-                    <TextBlock Text="Конец: " Margin="5"  VerticalAlignment="Center"></TextBlock>
-                    <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short" Margin="5"  
-                                VerticalAlignment="Center" SelectedDate="{Binding DateOut}"></DatePicker>
-                    <CheckBox Content="Показать" Margin="5"  VerticalAlignment="Center" IsChecked="{Binding FilterEnabled}"></CheckBox>
-                </StackPanel>
+                        <DataGrid ItemsSource="{Binding Contacts}" SelectedItem="{Binding currentContact}" 
+                                HorizontalAlignment="Left" CanUserAddRows="False" Width="610" RowHeight="25"
+                                AutoGenerateColumns="False" VerticalScrollBarVisibility="Auto">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="From" Binding="{Binding From}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="To" Binding="{Binding To}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Member1_ID" Binding="{Binding Member1_ID}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Member2_ID" Binding="{Binding Member2_ID}"></DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Bottom">
+                        <StackPanel Orientation="Horizontal" Height="50">
+                            <Button Content="Перейти на: " VerticalAlignment="Center" Command="{Binding GoCommand}"></Button>
+                            <TextBox Text="{Binding PageNumber}" VerticalAlignment="Center"></TextBox>
+                            <Button Content="Назад" Margin="5"  VerticalAlignment="Center" Command="{Binding BackCommand}"/>
+                            <Button Content="Вперед" Margin="5"  VerticalAlignment="Center" Command="{Binding ForwardCommand}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Height="50">
+                            <TextBlock Text="Начало: " Margin="5"  VerticalAlignment="Center"></TextBlock>
+                            <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short" Margin="5"  
+                                    VerticalAlignment="Center" SelectedDate="{Binding DateIn}"></DatePicker>
+                            <TextBlock Text="Конец: " Margin="5"  VerticalAlignment="Center"></TextBlock>
+                            <DatePicker IsDropDownOpen="False" SelectedDateFormat="Short" Margin="5"  
+                                    VerticalAlignment="Center" SelectedDate="{Binding DateOut}"></DatePicker>
+                            <CheckBox Content="Показать" Margin="5"  VerticalAlignment="Center" IsChecked="{Binding FilterEnabled}"></CheckBox>
+                        </StackPanel>
+                    </StackPanel>
                 </Grid>
             </TabItem>
         </TabControl>
-
     </Grid>
 </Window>

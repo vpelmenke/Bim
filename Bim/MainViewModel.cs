@@ -25,6 +25,7 @@ namespace Bim
         private Command _forwardCommand;
         private Command _backCommand;
         private Command _averageCommand;
+        private Command _goCommand;
         public Command ForwardCommand // Переход на следующую страницу
         {
             get
@@ -70,8 +71,6 @@ namespace Bim
                            {
                                Persons.Add(row);
                            }
-
-                           
                        }));
             }
         }
@@ -115,8 +114,6 @@ namespace Bim
                            {
                                Persons.Add(row);
                            }
-
-
                        }));
             }
         }
@@ -148,8 +145,55 @@ namespace Bim
                            }
                            else
                            {
-                               AverAge = "Такого нет!";
+                               AverAge = "Людей так не называют!";
                                OnPropertyChanged("AverAge");
+                           }
+                       }));
+            }
+        }
+
+        public Command GoCommand // Переход на нужный номер страницы
+        {
+            get
+            {
+                return _goCommand ??
+                       (_goCommand = new Command(obj =>
+                       {
+                           _page = Int32.Parse(PageNumber);
+                           Contacts.Clear();
+                           Persons.Clear();
+                           if (FilterEnabled)
+                           {
+                               var filterArray = _allContacts.Where(x =>
+                                   Convert.ToDateTime(x.From) >= DateIn && Convert.ToDateTime(x.To) <= DateOut
+                                                                        && Convert.ToDateTime(x.To)
+                                                                            .Subtract(Convert.ToDateTime(x.From)).Minutes >
+                                                                        10).ToArray();// Фильтр контактов дольше 10 минут
+                               var result = Paging(10, filterArray); // Итоговое отображение отфильтрованных данных
+                               foreach (var row in result)
+                               {
+                                   Contacts.Add(row);
+                               }
+                           }
+                           else
+                           {
+                               var contacts = Paging(10, _allContacts);
+                               foreach (var row in contacts)
+                               {
+                                   Contacts.Add(row);
+                               }
+                           }
+
+                           if (!Contacts.Any())
+                           {
+                               _backCommand.Execute(null);
+                               return;
+                           }
+
+                           var persons = Paging(10, _allPersons);
+                           foreach (var row in persons)
+                           {
+                               Persons.Add(row);
                            }
                        }));
             }
@@ -161,7 +205,18 @@ namespace Bim
         private string _averAge;
         private DateTime _dateIn = DateTime.Today;
         private DateTime _dateOut = DateTime.Today;
+        private string _pageNumber = "1";
         private bool _filterEnabled; // нужно ли применять фильтрацию по датам
+
+        public string PageNumber
+        {
+            get => _pageNumber;
+            set
+            {
+                _pageNumber = value;
+                OnPropertyChanged("PageNumber");
+            }
+        }
 
         public bool FilterEnabled
         {
