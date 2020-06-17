@@ -33,44 +33,8 @@ namespace Bim
                 return _forwardCommand ??
                        (_forwardCommand = new Command(obj =>
                        {
-
                            _page++;
-                           Contacts.Clear();
-                           Persons.Clear();
-
-                           if (FilterEnabled)
-                           {
-                               var filterArray = _allContacts.Where(x =>
-                                   Convert.ToDateTime(x.From) >= DateIn && Convert.ToDateTime(x.To) <= DateOut
-                                                                        && Convert.ToDateTime(x.To)
-                                                                            .Subtract(Convert.ToDateTime(x.From)).Minutes >
-                                                                        10).ToArray();// Фильтр контактов дольше 10 минут
-                               var result = Paging(10, filterArray); // Итоговое отображение отфильтрованных данных
-                               foreach (var row in result)
-                               {
-                                   Contacts.Add(row);
-                               }
-                           }
-                           else
-                           {
-                               var contacts = Paging(10, _allContacts);
-                               foreach (var row in contacts)
-                               {
-                                   Contacts.Add(row);
-                               }
-                           }
-
-                           if (!Contacts.Any())
-                           {
-                               _backCommand.Execute(null);
-                               return;
-                           }
-
-                           var persons = Paging(10, _allPersons);
-                           foreach (var row in persons)
-                           {
-                               Persons.Add(row);
-                           }
+                           UsePaging();
                        }));
             }
         }
@@ -81,39 +45,21 @@ namespace Bim
                 return _backCommand ??
                        (_backCommand = new Command(obj =>
                        {
-
                            if (_page <= 1) return;
                            _page--;
-                           Contacts.Clear();
-                           Persons.Clear();
-
-                           if (FilterEnabled)
-                           {
-                               var filterArray = _allContacts.Where(x =>
-                                   Convert.ToDateTime(x.From) >= DateIn && Convert.ToDateTime(x.To) <= DateOut
-                                                                        && Convert.ToDateTime(x.To)
-                                                                            .Subtract(Convert.ToDateTime(x.From)).Minutes >
-                                                                        10).ToArray(); // Фильтр контактов больше 10 минут
-                               var result = Paging(10, filterArray); // Итоговое отображение отфильтрованных данных
-                               foreach (var row in result)
-                               {
-                                   Contacts.Add(row);
-                               }
-                           }
-                           else
-                           {
-                               var contacts = Paging(10, _allContacts);
-                               foreach (var row in contacts)
-                               {
-                                   Contacts.Add(row);
-                               }
-                           }
-
-                           var persons = Paging(10, _allPersons);
-                           foreach (var row in persons)
-                           {
-                               Persons.Add(row);
-                           }
+                           UsePaging();
+                       }));
+            }
+        }
+        public Command GoCommand // Переход на нужный номер страницы
+        {
+            get
+            {
+                return _goCommand ??
+                       (_goCommand = new Command(obj =>
+                       {
+                           _page = Int32.Parse(PageNumber);
+                           UsePaging();
                        }));
             }
         }
@@ -136,7 +82,6 @@ namespace Bim
                                    age += Convert.ToInt32(row.Age);
                                }
                            }
-
                            if (count > 0)
                            {
                                var result = age / count;
@@ -152,50 +97,42 @@ namespace Bim
             }
         }
 
-        public Command GoCommand // Переход на нужный номер страницы
+        public void UsePaging()
         {
-            get
+            Contacts.Clear();
+            Persons.Clear();
+
+            if (FilterEnabled)
             {
-                return _goCommand ??
-                       (_goCommand = new Command(obj =>
-                       {
-                           _page = Int32.Parse(PageNumber);
-                           Contacts.Clear();
-                           Persons.Clear();
-                           if (FilterEnabled)
-                           {
-                               var filterArray = _allContacts.Where(x =>
-                                   Convert.ToDateTime(x.From) >= DateIn && Convert.ToDateTime(x.To) <= DateOut
-                                                                        && Convert.ToDateTime(x.To)
-                                                                            .Subtract(Convert.ToDateTime(x.From)).Minutes >
-                                                                        10).ToArray();// Фильтр контактов дольше 10 минут
-                               var result = Paging(10, filterArray); // Итоговое отображение отфильтрованных данных
-                               foreach (var row in result)
-                               {
-                                   Contacts.Add(row);
-                               }
-                           }
-                           else
-                           {
-                               var contacts = Paging(10, _allContacts);
-                               foreach (var row in contacts)
-                               {
-                                   Contacts.Add(row);
-                               }
-                           }
+                var filterArray = _allContacts.Where(x =>
+                    Convert.ToDateTime(x.From) >= DateIn && Convert.ToDateTime(x.To) <= DateOut
+                                                         && Convert.ToDateTime(x.To)
+                                                             .Subtract(Convert.ToDateTime(x.From)).Minutes >
+                                                         10).ToArray(); // Фильтр контактов больше 10 минут
+                var result = Paging(10, filterArray); // Итоговое отображение отфильтрованных данных
+                foreach (var row in result)
+                {
+                    Contacts.Add(row);
+                }
+            }
+            else
+            {
+                var contacts = Paging(10, _allContacts);
+                foreach (var row in contacts)
+                {
+                    Contacts.Add(row);
+                }
+            }
+            if (!Contacts.Any())
+            {
+                _backCommand.Execute(null);
+                return;
+            }
 
-                           if (!Contacts.Any())
-                           {
-                               _backCommand.Execute(null);
-                               return;
-                           }
-
-                           var persons = Paging(10, _allPersons);
-                           foreach (var row in persons)
-                           {
-                               Persons.Add(row);
-                           }
-                       }));
+            var persons = Paging(10, _allPersons);
+            foreach (var row in persons)
+            {
+                Persons.Add(row);
             }
         }
 
